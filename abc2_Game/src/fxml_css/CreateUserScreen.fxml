@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="815.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="code.CreateUserScreenController">
+   <bottom>
+      <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+         <children>
+            <Button layoutX="320.0" layoutY="74.0" mnemonicParsing="false" onAction="#button_OnSubmitUserName" prefHeight="75.0" prefWidth="175.0" text="Submit" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="320.0" AnchorPane.rightAnchor="320.0" />
+            <Label fx:id="label_invalidusername" alignment="CENTER" layoutX="316.0" layoutY="162.0" prefHeight="17.0" prefWidth="184.0" text="Error Message" textFill="RED" visible="false" AnchorPane.leftAnchor="316.0" AnchorPane.rightAnchor="315.0" />
+         </children>
+      </AnchorPane>
+   </bottom>
+   <center>
+      <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+         <children>
+            <Label alignment="CENTER" layoutX="145.0" layoutY="250.0" prefHeight="50.0" prefWidth="489.0" text="Enter Desired Username:" AnchorPane.bottomAnchor="225.0" AnchorPane.leftAnchor="154.0" AnchorPane.rightAnchor="172.0" AnchorPane.topAnchor="225.0">
+               <font>
+                  <Font name="System Bold" size="36.0" />
+               </font>
+            </Label>
+            <TextField fx:id="textfield_usernameField" layoutX="324.0" layoutY="286.0" AnchorPane.bottomAnchor="170.0" AnchorPane.leftAnchor="324.0" AnchorPane.rightAnchor="342.0" AnchorPane.topAnchor="305.0" />
+         </children>
+      </AnchorPane>
+   </center>
+</BorderPane>
