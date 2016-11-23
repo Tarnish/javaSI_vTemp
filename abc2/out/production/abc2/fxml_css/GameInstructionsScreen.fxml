@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.web.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.chart.*?>
+<?import javafx.scene.canvas.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="815.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="code.GameInstructionsScreenController">
+   <center>
+      <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+         <children>
+            <ImageView fitHeight="525.0" fitWidth="489.0" layoutX="163.0" layoutY="44.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../images/GameInstructions.png" />
+               </image>
+            </ImageView>
+            <Button layoutX="320.0" layoutY="601.0" mnemonicParsing="false" onAction="#button_OnGotoPlay" prefHeight="75.0" prefWidth="175.0" text="PLAY" AnchorPane.leftAnchor="320.0" AnchorPane.rightAnchor="320.0" />
+            <Label fx:id="label_username" prefHeight="50.0" prefWidth="50.0" text="L_Name2" />
+         </children>
+      </AnchorPane>
+   </center>
+</BorderPane>
