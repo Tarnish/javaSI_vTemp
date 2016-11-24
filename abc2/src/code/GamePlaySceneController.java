@@ -1,23 +1,18 @@
 package code;
 
-import javafx.animation.FadeTransition;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
-import javafx.concurrent.ScheduledService;
-import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.shape.Rectangle;
-import javafx.util.Duration;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class GamePlaySceneController extends GameInstructionsScreenController {
+
+    private Main main;
 
     @FXML private TextArea textarea_username;
 
@@ -27,63 +22,20 @@ public class GamePlaySceneController extends GameInstructionsScreenController {
 
     @FXML public Rectangle rectangle_gameZone;
 
-    @FXML private Rectangle rectangle_en1; //testing block
-
     @FXML public Rectangle rectangle_protagonist; //test public
 
-    @FXML private ImageView imgv_1;
+    static int enemyRemaining = 33;
 
-    private int enemyDirection = 0; //0 right | 1 left
-    final Image bullet = new Image("images\\ammo_pistol.png");
-
-
-    //TODO: Add fixed positions in data structure?
-    //TODO: Change enemy movement
-    //TODO: Add Protagonist bounds      --> Adjust Protagonist Bounds
-    //TODO: Fix Counter & fireID
-    //TODO: Fix ShootingMovementTimer
-    //TODO: Destroy Timers/Threads
-    //TODO: Add GameEnd Event
-
-    /*@FXML
-    void recMouseMove() {
-        //System.out.println("MOVE!"); //Mouse Move Detection
-
-
-        if (rectangle_en1.getLayoutY() >= 529) { //589
-            System.out.println("Enemy Reached you; RIP");
-            clientData.lives -= 1;
-            textarea_lives.setText(Integer.toString(clientData.lives));
-            return;
-        }
-
-        if (rectangle_gameZone.getWidth() <= rectangle_en1.getLayoutX() && enemyDirection == 0) { // H = 589 | W = 770 | GS
-            System.out.println("TOO FAR [RIGHT] ... STOPPING & ... LOWERING TO NEXT ROW");
-            enemyDirection = 1;
-            rectangle_en1.setLayoutY(rectangle_en1.getLayoutY() + 10);
-            return;
-        }
-        if (rectangle_en1.getLayoutX() <= 10 && enemyDirection == 1) { // H = 589 | W = 770 | GS
-            System.out.println("TOO FAR [LEFT] ... STOPPING & ... LOWERING TO NEXT ROW");
-            enemyDirection = 0;
-            rectangle_en1.setLayoutY(rectangle_en1.getLayoutY() + 10);
-            return;
-        }
-
-        if (enemyDirection == 0) {
-            //System.out.println("<X> X = " + rectangle_gameZone.getWidth());
-            //System.out.println("<PRE> X = " + rectangle_en1.getLayoutX());
-            rectangle_en1.setLayoutX(rectangle_en1.getLayoutX() + 10);
-            //System.out.println("<POST> X = " + rectangle_en1.getLayoutX());
-        }
-        else if (enemyDirection == 1) {
-            //System.out.println("<X> X = " + rectangle_gameZone.getWidth());
-            //System.out.println("<PRE> X = " + rectangle_en1.getLayoutX());
-            rectangle_en1.setLayoutX(rectangle_en1.getLayoutX() - 10);
-            //System.out.println("<POST> X = " + rectangle_en1.getLayoutX());
-        }
-
-    }*/
+    //TODO: Add fixed positions in data structure?                  -->
+    //TODO: Add enemy movement                                      --> Fixed? (Needs Exact Pos Adjusting/Testing)
+    //TODO: Add Protagonist bounds                                  --> Fixed? (Needs Exact Pos Adjusting/Testing)
+    //TODO: Fix Counter & fireID                                    --> Fixed?
+    //TODO: Fix ShootingMovementTimer                               -->
+    //TODO: Destroy Timers/Threads                                  -->
+    //TODO: Add GameEnd Event                                       -->
+    //TODO: Lower bullet index array? (since loop done)             -->
+    //TODO: Add Adjustable Enemy Movement Speed (based on Y-axis)   -->
+    //TODO: Allow enemies to shoot                                  -->
 
     @FXML
     void movePlayerPressed() {
@@ -113,31 +65,31 @@ public class GamePlaySceneController extends GameInstructionsScreenController {
         textarea_lives.setText(Integer.toString(clientData.lives));
     }
 
-
     public void setWeaponID(int num) {
         clientData.weapon_selected = num;
     }
 
-    public void movePlayerUp(ArrayList<ImageView> index, int id, ArrayList<ImageView> ivE) {
-        ShootingMovementTimer(index, id, ivE);
+    public void movePlayerUp(ArrayList<ImageView> index, int id, ArrayList<ImageView> ivE, double[] counter) {
+        ShootingMovementTimer(index, id, ivE, counter);
     }
 
-    //double counter = 1; //temp test global
-    double counter[] = new double [50];
-
-    public void setGlobalCounter() {
+    public void setGlobalCounter(double[] counter) {
         for (int i = 0; i < 50; i++) {
             counter[i] = 0;
         }
     }
 
-    private void ShootingMovementTimer(ArrayList<ImageView> index, int id, ArrayList<ImageView> ivE) {
+    private void ShootingMovementTimer(ArrayList<ImageView> index, int id, ArrayList<ImageView> ivE, double[] counter) {
 
         Timer timer = new Timer();
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                BoundChecker(index, id, ivE, timer);
+                try {
+                    BoundChecker(index, id, ivE, timer);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
 
                 if (index.get(id).getLayoutY() < 50 || !index.get(id).isVisible()) {
                     index.get(id).setVisible(false);
@@ -150,11 +102,20 @@ public class GamePlaySceneController extends GameInstructionsScreenController {
         }, 0, 50); // < 160 or not smooth 16 (if set lower timer (e.g. 15) checking will go too fast and lead to potential errors)
     }
 
-    private void BoundChecker(ArrayList<ImageView> index, int id, ArrayList<ImageView> ivE, Timer timer) { //id = bullet id
+    private void BoundChecker(ArrayList<ImageView> index, int id, ArrayList<ImageView> ivE, Timer timer) throws IOException { //id = bullet id
         for (int i = 0; i < 33; i++) {
             if (index.get(id).getBoundsInParent().intersects(ivE.get(i).getBoundsInParent()) && ivE.get(i).isVisible()) {
+                clientData.currentScore += 100;
+                textarea_score.setText(Integer.toString(clientData.currentScore));
+                enemyRemaining--;
+
                 index.get(id).setVisible(false);
                 ivE.get(i).setVisible(false);
+
+                if (enemyRemaining == 0) {
+                    System.out.println("YOU DESTROYED THEM ALL");
+                }
+
                 timer.cancel();
             }
         }
